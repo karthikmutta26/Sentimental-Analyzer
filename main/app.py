@@ -22,7 +22,7 @@ app = Flask(__name__)
 # Initialize analyzers
 flipkart_sid = SentimentIntensityAnalyzer()
 snapdeal_sid = SentimentIntensityAnalyzer()
-
+nykaa_sid = SentimentIntensityAnalyzer()
 
 
 @app.route('/')
@@ -286,13 +286,6 @@ def analyze_nykaa(url_base):
     wordcloud_url = base64.b64encode(wordcloud_img.getvalue()).decode()
 
     return sentiment_counts, plot_url,wordcloud_url
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
