@@ -8,7 +8,11 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 
-nltk.download('vader_lexicon')
+def download_nltk_data():
+    nltk.download('vader_lexicon')
+
+# Download NLTK data before the Streamlit app starts
+download_nltk_data()
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
