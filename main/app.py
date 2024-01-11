@@ -2,13 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import nltk
-from flask import Flask, render_template, request
+import streamlit as st
+from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-from flask import Flask, render_template, request, redirect, url_for
-from wordcloud import WordCloud
 
 nltk.download('vader_lexicon')
 
@@ -17,37 +15,10 @@ headers = {
     'Accept-Language': 'en-us,en;q=0.5'
 }
 
-app = Flask(__name__)
-
 # Initialize analyzers
 flipkart_sid = SentimentIntensityAnalyzer()
 snapdeal_sid = SentimentIntensityAnalyzer()
 nykaa_sid = SentimentIntensityAnalyzer()
-
-
-@app.route('/')
-def index():
-    image_url = url_for('static', filename='images/background.jpg')
-    return render_template('index.html', image_url=image_url)
-
-@app.route('/analyze', methods=['POST'])
-def analyze():
-    selected_analyzer = request.form['analyzer']
-
-    if selected_analyzer == 'flipkart':
-        url_base = request.form['url']
-        sentiment_counts, plot_url, wordcloud_url = analyze_flipkart(url_base)
-    elif selected_analyzer == 'snapdeal':
-        url_base = request.form['url']
-        sentiment_counts, plot_url, wordcloud_url = analyze_snapdeal(url_base)
-    elif selected_analyzer == 'nykaa':
-        url_base = request.form['url']
-        sentiment_counts, plot_url, wordcloud_url = analyze_nykaa(url_base)
-    else:
-        return "Invalid analyzer selected."
-
-    return render_template('result.html', sentiment_counts=sentiment_counts, plot_url=plot_url, wordcloud_url=wordcloud_url)
-
 
 def sentiment_Vader(text, sid):
     if text.isdigit():
@@ -68,7 +39,6 @@ def sentiment_Vader(text, sid):
         else:
             return "neutral"
 
-
 def analyze_flipkart(url_base):
     all_reviews = []
 
@@ -86,14 +56,11 @@ def analyze_flipkart(url_base):
         reviews = [c.div.div.get_text(strip=True) for c in review_divs]
         all_reviews.extend(reviews)
 
-    # Save all reviews to CSV
-
     # Perform sentiment analysis on the collected reviews
     data = pd.DataFrame({'review': all_reviews})
     data['polarity'] = data['review'].apply(lambda review: sentiment_Vader(review, flipkart_sid))
 
     return generate_results(data)
-
 
 def analyze_snapdeal(url_base):
     all_reviews = []
@@ -114,14 +81,11 @@ def analyze_snapdeal(url_base):
 
     all_reviews = list(set(all_reviews))
 
-    # Save all reviews to CSV
-
     # Perform sentiment analysis on the collected reviews
     data = pd.DataFrame({'review': all_reviews})
     data['polarity'] = data['review'].apply(lambda review: sentiment_Vader(review, snapdeal_sid))
 
     return generate_results(data)
-
 
 def analyze_nykaa(url_base):
     all_reviews = []
@@ -142,14 +106,11 @@ def analyze_nykaa(url_base):
 
     all_reviews = list(set(all_reviews))
 
-    # Save all reviews to CSV
-
     # Perform sentiment analysis on the collected reviews
     data = pd.DataFrame({'review': all_reviews})
     data['polarity'] = data['review'].apply(lambda review: sentiment_Vader(review, nykaa_sid))
 
     return generate_results(data)
-
 
 def generate_results(data):
     # Display the count of each sentiment category
@@ -190,6 +151,9 @@ def generate_results(data):
 
     return sentiment_counts, plot_url, wordcloud_url
 
+def main():
+    st.title("Sentiment Analysis App")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    selected_analyzer = st.radio("Select an analyzer", ('Flipkart', 'Snapdeal', 'Nykaa'))
+
+    url_base = st.text_input("Enter the URL base:")
