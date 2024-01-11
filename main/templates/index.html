@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Review Sentiment Analysis</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap");
+      body {
+        font-family: "Arial", sans-serif;
+        background-image: url("{{ image_url }}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .formcontent {
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 400px;
+        margin-left: 800px;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      label {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 20px;
+      }
+
+      button {
+        width: 140px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+      table {
+        width: 100%;
+      }
+
+      select {
+        height: 30px;
+        width: 150px;
+      }
+      body.loading {
+        overflow: hidden;
+      }
+
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url(https://img.freepik.com/free-photo/3d-render-spotlights-grunge-brick-wall_1048-6284.jpg?w=740&t=st=1704705569~exp=1704706169~hmac=28c22bc5b2f535bfd9279279cddfd900c16db01a09e627aaaa9782541bc494be);
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+
+      .loading-message {
+        font-size: 36px;
+        font-weight: bold;
+        color: #fff; /* White text color */
+        text-align: center;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Show loading overlay on page load
+        document.getElementById("loading-overlay").style.display = "flex";
+
+        // Simulate some delay (you can remove this in a production scenario)
+        setTimeout(function () {
+          document.getElementById("loading-overlay").style.display = "none";
+        }, 5000); // Display for 3 seconds (adjust as needed)
+      });
+
+      document.querySelector("form").addEventListener("submit", function () {
+        document.getElementById("loading-overlay").style.display = "flex";
+      });
+      function validateForm() {
+        var selectedAnalyzer = document.querySelector("#analyzerDropdown");
+        var enteredURL = document.getElementById("url").value;
+
+        if (
+          (selectedAnalyzer.value === "flipkart" &&
+            !enteredURL.includes("flipkart")) ||
+          (selectedAnalyzer.value === "snapdeal" &&
+            !enteredURL.includes("snapdeal")) ||
+          (selectedAnalyzer.value === "nykaa" && !enteredURL.includes("nykaa"))
+        ) {
+          alert(
+            "Invalid combination! Please enter a valid URL or select the correct analyzer."
+          );
+          return false;
+        }
+
+        return true;
+      }
+    </script>
+  </head>
+  <body>
+    <div id="loading-overlay" class="loading-overlay">
+      <div
+        class="loading-message"
+        style="font-family: 'Dancing Script', cursive"
+      >
+        <h1>
+          A Data-Driven Approach for Understanding Customer Sentiment Trends in
+          E-Commerce
+        </h1>
+        <h3>Welcome to Sentiment Analysis!</h3>
+      </div>
+    </div>
+    <div class="formcontent">
+      <h1>Sentimental Analyzer</h1>
+      <form action="/analyze" method="post" onsubmit="return validateForm();">
+        <label for="url">Enter Product URL:</label>
+        <input type="text" id="url" name="url" required />
+
+        <div class="button-container">
+          <table>
+            <tr>
+              <td>
+                <label for="analyzerDropdown">Select Analyzer :</label>
+              </td>
+              <td>
+                <select id="analyzerDropdown" name="analyzer" required>
+                  <option>Select Analyzer</option>
+                  <option value="flipkart">Flipkart</option>
+                  <option value="snapdeal">Snapdeal</option>
+                  <option value="nykaa">Nykaa</option>
+                </select>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="button-container">
+          <button type="submit">Analyze</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

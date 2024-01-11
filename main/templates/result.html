@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Result Page</title>
+    <style>
+      body {
+        background: url("https://img.freepik.com/free-vector/colorful-triangle-shapes-banner-technical-wire-mesh-style-vector_1017-45720.jpg?w=1060&t=st=1702561549~exp=1702562149~hmac=c1731e69a5e8bf03b08ed2d82fa95ae2dffffa92e5125f9fc80db13e232ce05e");
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        flex-direction: column; /* Align content in a column */
+      }
+
+      .content-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        width: 80%;
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      .chart-container {
+        flex: 1;
+        margin: 10px;
+        text-align: center;
+      }
+
+      img {
+        max-width: 100%;
+        height: 520px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SENTIMENTAL ANALYSIS RESULTS</h1>
+
+    <div class="content-container">
+      <!-- Display the pie chart in the first column -->
+      <div class="chart-container">
+        <h2 style="color: #333; font-size: 18px">Pie Chart</h2>
+        <img
+          src="data:image/png;base64,{{ plot_url }}"
+          alt="Sentiment Pie Chart"
+        />
+      </div>
+
+      <!-- Display the word cloud in the second column -->
+      <div class="chart-container">
+        <h2 style="color: #333; font-size: 18px">Word Cloud for All Reviews</h2>
+        <img
+          src="data:image/png;base64,{{ wordcloud_url }}"
+          alt="Word Cloud for All Reviews"
+        />
+      </div>
+    </div>
+  </body>
+</html>
